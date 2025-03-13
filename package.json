@@ -6,6 +6,9 @@
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "homepage": "https://d3js.org/getting-started",
+  "repository": {
+    "url": "https://github.com/shuvajitg/myd3g"
+  },
   "scripts": {
     "build": "tsup"
   },
