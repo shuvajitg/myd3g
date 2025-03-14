@@ -1,6 +1,6 @@
 {
   "name": "myd3g",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "just simple D3js graoh plugin",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
