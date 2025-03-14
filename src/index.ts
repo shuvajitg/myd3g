@@ -1,2 +1,7 @@
 export { default as Barchart } from "./graphs/Barchart"
 export { default as BrushableScatterplot } from "./graphs/BrushableScatterplot"
+export { default as MultiIndexChart } from "./graphs/MultiIndexChart"
+export { default as PannableChart } from "./graphs/PannableChart"
+export { default as ScatterplotMatrix } from "./graphs/ScatterplotMatrix"
+export { default as SunburstChart } from "./graphs/SunburstChart"
+export { default as LineChart } from "./graphs/Linechart"

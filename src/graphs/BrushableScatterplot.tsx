@@ -8,11 +8,13 @@ interface BrushableScatterplotData {
         sepalWidth: number;
         species: string;
     }[]
-    width: number;
-    height: number;
+    width?: number;
+    height?: number;
+    className?: string
+    style?: React.CSSProperties;
 }
 
-const BrushableScatterplot = ({ data, width = 600, height = 400 }: BrushableScatterplotData) => {
+const BrushableScatterplot = ({ data, width = 600, height = 400, className, style }: BrushableScatterplotData) => {
     const svgRef = useRef<SVGSVGElement | null>(null);
     const [selectedPoints, setSelectedPoints] = useState<{ sepalLength: number; sepalWidth: number; species: string; }[]>([]);
 
@@ -105,7 +107,7 @@ const BrushableScatterplot = ({ data, width = 600, height = 400 }: BrushableScat
 
     return (
         <div>
-            <svg ref={svgRef} width={width} height={height} style={{ border: "1px solid black" }} />
+            <svg className={className} ref={svgRef} width={width} height={height} style={{ border: "1px solid black", ...style }} />
             <h3>Selected Points: {selectedPoints.length}</h3>
             <ul>
                 {selectedPoints.map((point, index) => (

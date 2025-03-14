@@ -3,10 +3,16 @@ import * as d3 from 'd3'
 
 interface BarchartData {
     data: { Sales: number; Profit: number }[],
-    width: number, height: number, marginTop: number, marginRight: number, marginBottom: number, marginLeft: number
+    width?: number,
+    height?: number,
+    marginTop?: number,
+    marginLeft?: number,
+    marginRight?: number,
+    marginBottom?: number,
+    className?: string
 }
 
-function Barchart({ data, width = 928, height = 500, marginTop = 20, marginRight = 0, marginBottom = 30, marginLeft = 40 }: BarchartData) {
+function Barchart({ data, width = 928, height = 500, marginTop = 20, marginRight = 0, marginBottom = 30, marginLeft = 40, className }: BarchartData) {
     const chartRef = useRef<SVGSVGElement | null>(null)
 
 
@@ -80,7 +86,7 @@ function Barchart({ data, width = 928, height = 500, marginTop = 20, marginRight
 
     return (
         < >
-            <svg ref={chartRef}></svg>
+            <svg className={className} ref={chartRef}></svg>
         </>
     )
 }
