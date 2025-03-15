@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react'
 import * as d3 from 'd3'
 
 interface BarchartData {
-    data: { Sales: number; Profit: number }[],
+    data: { x: number; y: number }[],
     width?: number,
     height?: number,
     marginTop?: number,
@@ -28,13 +28,13 @@ function Barchart({ data, width = 928, height = 500, marginTop = 20, marginRight
             .attr("style", "max-width: 100%; height: auto;");
 
         const x = d3.scaleBand()
-            // .domain(d3.sort(data, (d: any) => -d.Profit).map(d => d.Sales))
-            .domain(data.map((d: any) => d.Sales))
+            // .domain(d3.sort(data, (d: any) => -d.y).map(d => d.x))
+            .domain(data.map((d: any) => d.x))
             .range([marginLeft, width - marginRight])
             .padding(0.1);
 
         const y = d3.scaleLinear()
-            .domain([0, d3.max(data, (d: any) => d.Profit as number) || 0])
+            .domain([0, d3.max(data, (d: any) => d.y as number) || 0])
             .nice()
             .range([height - marginBottom, marginTop]);
 
@@ -46,11 +46,11 @@ function Barchart({ data, width = 928, height = 500, marginTop = 20, marginRight
             .selectAll("rect")
             .data(data)
             .join("rect")
-            .attr("x", (d: any) => x(d.Sales) ?? 0)
-            .attr("y", (d: any) => y(d.Profit))
+            .attr("x", (d: any) => x(d.x) ?? 0)
+            .attr("y", (d: any) => y(d.y))
             .attr("height", (d: any) => {
-                const height = y(0) - y(d.Profit);
-                // console.log(`Sales: ${d.Sales}, Profit: ${d.Profit}, Height: ${height}`);
+                const height = y(0) - y(d.y);
+                // console.log(`x: ${d.x}, y: ${d.y}, Height: ${height}`);
                 return isNaN(height) ? 0 : height;
             })
             .attr("width", x.bandwidth());
@@ -75,7 +75,7 @@ function Barchart({ data, width = 928, height = 500, marginTop = 20, marginRight
 
             function zoomed(event: d3.D3ZoomEvent<SVGRectElement, unknown>) {
                 x.range([marginLeft, width - marginRight].map(d => event.transform.applyX(d)));
-                svg.selectAll("rect").attr("x", (d: any) => x(d.Sales)).attr("width", x.bandwidth());
+                svg.selectAll("rect").attr("x", (d: any) => x(d.x)).attr("width", x.bandwidth());
                 svg.selectAll("g.x-axis").call(xAxis);
             }
         }

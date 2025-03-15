@@ -12,6 +12,10 @@
 
 ### How to Use
 
+```
+npm i myd3g
+```
+
 `Bar chart`
 
 ```jsx
@@ -19,11 +23,11 @@ import {BarChart} from 'myd3g';
 
 // must have name and value
 const data = [
-    { Sales: 3, Profit: 30, ... },
-    { Sales: 6, Profit: 80, ... },
-    { Sales: 5, Profit: 45, ... },
-    { Sales: 4, Profit: 60, ... },
-    { Sales: 2, Profit: 20, ... },
+    { x: 3, y: 30, ... },
+    { x: 6, y: 80, ... },
+    { x: 5, y: 45, ... },
+    { x: 4, y: 60, ... },
+    { x: 2, y: 20, ... },
     {...}
 ]
 
@@ -69,7 +73,14 @@ const BrushableScatterplot() => {
                 data = {dara}
                 width = {number}
                 height = {number}
-                className = {className}>
+                className = {className}
+                style = {inlineCss}
+                xDomainStart = {number}
+                xDomainEnd = {number}
+                yDomainStart = {number}
+                yDomainEnd = {number}
+                speciesValues = ["string", "string", ...]
+                colors = ["read", "blue", ...]>
         </>
     )
 }
@@ -84,17 +95,17 @@ import {MultiIndexChart} from 'myd3g';
 
 const data = {
   AMZN: [
-    { date: '2023-01-01', value: 100 },
-    { date: '2023-02-01', value: 120 },
-    { date: '2023-03-01', value: 140 },
-    { date: '2023-04-01', value: 180 },
+    { x: '2023-01-01', y: 100 },
+    { x: '2023-02-01', y: 120 },
+    { x: '2023-03-01', y: 140 },
+    { x: '2023-04-01', y: 180 },
     {....}
   ],
   MSFT: [
-    { date: '2023-01-01', value: 100 },
-    { date: '2023-02-01', value: 110 },
-    { date: '2023-03-01', value: 130 },
-    { date: '2023-04-01', value: 160 },
+    { x: '2023-01-01', y: 100 },
+    { x: '2023-02-01', y: 110 },
+    { x: '2023-03-01', y: 130 },
+    { x: '2023-04-01', y: 160 },
   ],
   xyz: [
     {....}

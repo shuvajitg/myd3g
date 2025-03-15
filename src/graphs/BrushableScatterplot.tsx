@@ -1,22 +1,46 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 
 
 interface BrushableScatterplotData {
     data: {
-        sepalLength: number;
-        sepalWidth: number;
-        species: string;
+        x: number;
+        y: number;
+        species?: string;
     }[]
     width?: number;
     height?: number;
-    className?: string
+    className?: string;
     style?: React.CSSProperties;
+    xDomainStart: number;
+    xDomainEnd: number;
+    yDomainStart: number;
+    yDomainEnd: number;
+    speciesValues: string[];
+    colors: string[];
 }
 
-const BrushableScatterplot = ({ data, width = 600, height = 400, className, style }: BrushableScatterplotData) => {
+const BrushableScatterplot = ({
+    data,
+    width = 600,
+    height = 400,
+    className,
+    style,
+    xDomainStart,
+    xDomainEnd,
+    yDomainStart,
+    yDomainEnd,
+    speciesValues,
+    colors }: BrushableScatterplotData) => {
     const svgRef = useRef<SVGSVGElement | null>(null);
-    const [selectedPoints, setSelectedPoints] = useState<{ sepalLength: number; sepalWidth: number; species: string; }[]>([]);
+    const [selectedPoints, setSelectedPoints] = useState<{ x: number; y: number; species: string; }[]>([]);
+    const [speciesValue, setSpeciesValue] = useState<string[]>([])
+    const [colorScaleState, setColorScaleState] = useState<string[]>([])
+
+    useCallback(() => {
+        setSpeciesValue(speciesValues)
+        setColorScaleState(colors)
+    }, [])
 
     useEffect(() => {
         if (!svgRef.current) return;
@@ -31,12 +55,12 @@ const BrushableScatterplot = ({ data, width = 600, height = 400, className, styl
         // Scales
         const xScale = d3
             .scaleLinear()
-            .domain([4, 8]) // Sepal Length range
+            .domain([xDomainStart, xDomainEnd]) // Sepal Length range
             .range([0, plotWidth]);
 
         const yScale = d3
             .scaleLinear()
-            .domain([2, 4]) // Sepal Width range
+            .domain([yDomainStart, yDomainEnd]) // Sepal Width range
             .range([plotHeight, 0]);
 
         // Create chart group
@@ -54,8 +78,8 @@ const BrushableScatterplot = ({ data, width = 600, height = 400, className, styl
         // Color scale for species
         const colorScale = d3
             .scaleOrdinal()
-            .domain(["setosa", "versicolor", "virginica"])
-            .range(["blue", "green", "red"]);
+            .domain(speciesValue)
+            .range(colorScaleState);
 
         // Draw Scatterplot
         const points = chart
@@ -63,10 +87,10 @@ const BrushableScatterplot = ({ data, width = 600, height = 400, className, styl
             .data(data)
             .enter()
             .append("circle")
-            .attr("cx", (d: any) => xScale(d.sepalLength))
-            .attr("cy", (d: any) => yScale(d.sepalWidth))
+            .attr("cx", (d: any) => xScale(d.x))
+            .attr("cy", (d: any) => yScale(d.y))
             .attr("r", 6)
-            .attr("fill", (d: any) => colorScale(d.species) as string)
+            .attr("fill", (d: any) => colorScale(d?.species) as string)
             .attr("stroke", "black")
             .attr("class", "dot");
 
@@ -84,20 +108,21 @@ const BrushableScatterplot = ({ data, width = 600, height = 400, className, styl
 
                 // Find points within the selected brush area
                 const brushedData = data.filter(
-                    (d) =>
-                        xScale(d.sepalLength) >= x0 &&
-                        xScale(d.sepalLength) <= x1 &&
-                        yScale(d.sepalWidth) >= y0 &&
-                        yScale(d.sepalWidth) <= y1
+                    (d): d is { x: number; y: number; species: string } =>
+                        xScale(d.x) >= x0 &&
+                        xScale(d.x) <= x1 &&
+                        yScale(d.y) >= y0 &&
+                        yScale(d.y) <= y1 &&
+                        d.species !== undefined
                 );
-                console.log(brushedData);
+                // console.log(brushedData);
 
                 // Update selected points
                 setSelectedPoints(brushedData);
 
                 // Highlight selected points
-                points.attr("fill", (d: { sepalLength: number; sepalWidth: number; species: string }): string =>
-                    brushedData.some((point) => point.sepalLength === d.sepalLength && point.sepalWidth === d.sepalWidth && point.species === d.species) ? "orange" : colorScale(d.species) as string
+                points.attr("fill", (d: { x: number; y: number; species?: string }): string =>
+                    brushedData.some((point) => point.x === d.x && point.y === d.y && point?.species === d?.species) ? "orange" : colorScale(d?.species) as string
                 );
             });
 
@@ -111,7 +136,7 @@ const BrushableScatterplot = ({ data, width = 600, height = 400, className, styl
             <h3>Selected Points: {selectedPoints.length}</h3>
             <ul>
                 {selectedPoints.map((point, index) => (
-                    <li key={index}>{`Sepal Length: ${point.sepalLength}, Sepal Width: ${point.sepalWidth}, Species: ${point.species}`}</li>
+                    <li key={index}>{`Sepal Length: ${point.x}, Sepal Width: ${point.y}, Species: ${point?.species}`}</li>
                 ))}
             </ul>
         </div>

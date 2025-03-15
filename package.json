@@ -13,9 +13,10 @@
     "build": "tsup"
   },
   "keywords": [
-    "D3js"
+    "D3js",
+    "React.js"
   ],
-  "author": "",
+  "author": "Shuvajit Gayen",
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
